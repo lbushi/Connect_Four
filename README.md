@@ -10,3 +10,5 @@ Documentation for most files will be added eventually.
 To build the app, simply copy these files into a Visual Studio Project and run the build command or for Linux Users you could simply download these files, run dos2unix * to convert them to linux format and then write a simple Makefile to automate the build.
 
 Note that for the build to work, you must first download the GLFW, GLEW and GLM libraries and do the linking with files with glfw3.lib and glew32s.lib in addition to including the proper header files.
+
+Also, i might containerize the app to make its usage easier.
