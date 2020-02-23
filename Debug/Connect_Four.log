@@ -1,0 +1,4 @@
+﻿  main.cc
+C:\Users\Θσερ\source\repos\Connect_Four\Connect_Four\main.cc(111,13): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\Θσερ\source\repos\Connect_Four\Connect_Four\main.cc(169,21): warning C4018: '<': signed/unsigned mismatch
+  Connect_Four.vcxproj -> C:\Users\Θσερ\source\repos\Connect_Four\Debug\Connect_Four.exe
