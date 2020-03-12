@@ -6,4 +6,9 @@ There are several files which are not directly relevant to the application but w
 
 The app uses the well known notifier-observer pattern which as usual makes the game open to modification. The OpenGL code however needs some serious refactoring into its own header/source files because it is currently embedded in the driver code. Again, contributions are welcomed from people comfortable with OpenGL.
 Documentation for most files will be added eventually.
-To build the app, simply copy these files into a Visual Studio Project and run the build command or for Linux Users you could simply downloads these files, run dos2unix * to convert to linux format and then write a simple Makefile to automate the build.
+
+To build the app, simply copy these files into a Visual Studio Project and run the build command or for Linux Users you could simply download these files, run dos2unix * to convert them to linux format and then write a simple Makefile to automate the build.
+
+Note that for the build to work, you must first download the GLFW, GLEW and GLM libraries and do the linking with files with glfw3.lib and glew32s.lib in addition to including the proper header files.
+
+Also, i might containerize the app to make its usage easier.
