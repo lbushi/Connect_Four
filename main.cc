@@ -14,9 +14,10 @@ const char* vertexShaderSource = "#version 330 core\n"
 "layout (location = 0) in vec3 aPos;\n"
 "layout (location = 1) in vec2 coords;\n"
 "out vec2 texCoords;\n"
+"uniform mat4 model;\n"
 "void main()\n"
 "{\n"
-"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+"   gl_Position = model * vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
 "   texCoords = coords;\n"
 "}\0";
 const char* fragmentShaderSource = "#version 330 core\n"
@@ -48,10 +49,14 @@ void framebuffer_size_callback(GLFWwindow* window, int new_width, int new_height
 	height = new_height;
 }
 class Shape {
+	float initPosx, initPosy;
+	const float fall_speed = 0.1f;
+	int fall_time, actual_time;
 	int col, row;
 	unsigned int vao, vbo, texture;
 public:
-	Shape(int col, int row): col{col}, row{row} {
+	Shape(int col, int row) : col{ col }, row{ row }, initPosx{ (2 * col + 1) * 0.125f - 1.0f }, initPosy{ 0.875f }, actual_time{ 0 } {
+		fall_time = (initPosy - (row * 0.25f - 0.875f)) / fall_speed;
 		glGenVertexArrays(1, &vao);
 		glGenBuffers(1, &vbo);
 		glGenTextures(1, &texture);
@@ -59,7 +64,7 @@ public:
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture_width, texture_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, my_data);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
-	void draw() {
+	void draw(int program) {
 		float vertices[] = {
 		col * 0.25f - 1.0f, row * 0.25f - 1.0f, 0.0f, 0.0f,
 		col * 0.25f - 1.0f,  (row + 1) * 0.25f - 1.0f, 0.0f, 1.0f,
@@ -79,9 +84,13 @@ public:
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		if (actual_time > fall_time)
+			actual_time = fall_time;
+		glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_FALSE, &glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, fall_speed * (fall_time - actual_time), 0.0f))[0][0]);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glBindVertexArray(0);
+		++actual_time;
 	}
 	int get_col() const {
 		return col;
@@ -178,7 +187,7 @@ int main() {
 			else {
 				glUniform1f(glGetUniformLocation(program, "c"), 0.0f);
 			}
-			shapes[i].draw();
+			shapes[i].draw(program);
 		}
 		if (event) {
 			shapes.emplace_back(Shape{ col, 7 - g.get_row(col)});
